@@ -1,46 +1,69 @@
-[![Gated by Zuul](https://zuul-ci.org/gated.svg)](https://ansible.softwarefactory-project.io/zuul/status)
+Hardware requirements
 
-<img src="https://raw.githubusercontent.com/ansible/awx-logos/master/awx/ui/client/assets/logo-login.svg?sanitize=true" width=200 alt="AWX" />
+========  requirements ============ :
 
-AWX provides a web-based user interface, REST API, and task engine built on top of [Ansible](https://github.com/ansible/ansible). It is the upstream project for [Tower](https://www.ansible.com/tower), a commercial derivative of AWX.  
+    RAM: at leasts 4GB of memory.
+    CPU: at least 2 cpu cores.
+    HDD: at least 20GB of space.
+    Running Docker, Openshift, or Kubernetes.
+    If you choose to use an external PostgreSQL database, please note that the minimum version is 9.4.
 
-To install AWX, please view the [Install guide](./INSTALL.md).
+Install the dependency package
 
-To learn more about using AWX, and Tower, view the [Tower docs site](http://docs.ansible.com/ansible-tower/index.html).
+Step 1: Disable SElinux and reboot the server.
 
-The AWX Project Frequently Asked Questions can be found [here](https://www.ansible.com/awx-project-faq).
+You run the following command to replace enforcing with disabled in the config file of SElinux.
 
-The AWX logos and branding assets are covered by [our trademark guidelines](https://github.com/ansible/awx-logos/blob/master/TRADEMARKS.md).
+# sed -i 's|SELINUX=enforcing|SELINUX=disabled|g' /etc/selinux/config
 
-Contributing
-------------
+And then reboot the server:
 
-- Refer to the [Contributing guide](./CONTRIBUTING.md) to get started developing, testing, and building AWX.
-- All code submissions are done through pull requests against the `devel` branch.
-- All contributors must use git commit --signoff for any commit to be merged, and agree that usage of --signoff constitutes agreement with the terms of [DCO 1.1](./DCO_1_1.md)
-- Take care to make sure no merge commits are in the submission, and use `git rebase` vs `git merge` for this reason.
-- If submitting a large code change, it's a good idea to join the `#ansible-awx` channel on irc.freenode.net, and talk about what you would like to do or add first. This not only helps everyone know what's going on, it also helps save time and effort, if the community decides some changes are needed.
+# reboot
 
-Reporting Issues
-----------------
+Step 2: Install the dependency packages required for AWX.
 
-If you're experiencing a problem that you feel is a bug in AWX, or have ideas for how to improve AWX, we encourage you to open an issue, and share your feedback. But before opening a new issue, we ask that you please take a look at our [Issues guide](./ISSUES.md).
+You run the following commands in turn:
 
-Code of Conduct
----------------
+# yum -y install epel-release
+# yum -y install git gcc gcc-c++ lvm2 bzip2 gettext nodejs yum-utils device-mapper-persistent-data ansible python-pip
 
-We ask all of our community members and contributors to adhere to the [Ansible code of conduct](http://docs.ansible.com/ansible/latest/community/code_of_conduct.html). If you have questions, or need assistance, please reach out to our community team at [codeofconduct@ansible.com](mailto:codeofconduct@ansible.com)   
+Step 3: Install Docker-CE.
 
-Get Involved
-------------
+First, you run the command below to remove the old version of Docker on the server (if any).
 
-We welcome your feedback and ideas. Here's how to reach us with feedback and questions:
+# yum -y remove docker docker-common docker-selinux docker-engine
 
-- Join the `#ansible-awx` channel on irc.freenode.net
-- Join the [mailing list](https://groups.google.com/forum/#!forum/awx-project) 
+Next, you add the Docker-CE repository to the server.
 
-License
--------
+# yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-[Apache v2](./LICENSE.md)
+And now you run the command below to install Docker-CE.
 
+# yum -y install docker-ce
+
+After installing Docker-CE, you enable and start the docker service.
+
+# systemctl start docker && systemctl enable docker
+
+AWX require docker python module and you can install it via pip.
+
+# pip install -U docker-py
+
+Then run the following command to check the installed version.
+
+
+Install Ansible AWX on CentOS 7
+
+Step 1: Clone AWX from the repository.
+git clone  https://github.com/bakuppus/awx-4.git
+
+Step 2: Install
+$ cd /opt/
+$ cd awx-4
+$ kubectl create -f StorageClass.yaml 
+$ cd /opt/awx-4/installer
+$ ansible-playbook -i inventory install.yml 
+
+AWX user: admin/password
+
+That's it
