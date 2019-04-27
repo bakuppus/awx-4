@@ -52,7 +52,8 @@ AWX require docker python module and you can install it via pip.
 Then run the following command to check the installed version.
 
 
-Install Ansible AWX on CentOS 7
+# Install Ansible AWX on CentOS 7
+# ################################
 
 Step 1: Clone AWX from the repository.
 git clone  https://github.com/bakuppus/awx-4.git
