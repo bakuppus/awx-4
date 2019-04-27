@@ -59,11 +59,16 @@ Step 1: Clone AWX from the repository.
 git clone  https://github.com/bakuppus/awx-4.git
 
 Step 2: Install
-$ cd /opt/
-$ cd awx-4
-$ kubectl create -f StorageClass.yaml 
-$ cd /opt/awx-4/installer
-$ ansible-playbook -i inventory install.yml 
+
+ cd /opt/
+
+ cd awx-4
+
+ kubectl create -f StorageClass.yaml 
+
+ cd /opt/awx-4/installer
+
+ ansible-playbook -i inventory install.yml 
 
 AWX user: admin/password
 
